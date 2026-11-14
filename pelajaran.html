@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Belajar Interaktif - CODA</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- PDF.js CDN untuk merender halaman PDF secara murni per slide di canvas -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+</head>
+<body class="classroom-body">
+    <header class="glass-nav">
+        <h3 id="classroomTitle">Ruang Belajar Kelas</h3>
+        <div class="status-indicator">
+            <span id="activeRoleBadge" class="badge-role">-</span>
+            <span id="activeTargetBadge" class="badge-target">-</span>
+        </div>
+        <!-- Tombol Selesai & Simpan Nilai Hanya untuk Guru -->
+        <button id="btnSelesaiBelajar" class="btn-danger" style="display:none;">Selesai & Simpan Nilai</button>
+    </header>
+
+    <div class="classroom-container">
+        <div id="selectMateriPrompt" class="glass-card center-prompt">
+            <h3>Pilih Materi untuk Dimulai</h3>
+            <select id="selectMateriDropdown" class="form-control" style="margin: 15px 0;"></select>
+            <button id="btnMulaiPelajaran" class="btn-primary">Mulai Sesi Pembelajaran</button>
+        </div>
+
+        <!-- Viewer Dokumen PDF per Halaman (Canvas) -->
+        <div id="pptViewerSection" style="display:none;">
+            <div class="glass-card ppt-card" style="max-width: 100%;">
+                <div class="slide-header-info" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <span class="slide-counter-badge" id="slideInfoText">Halaman 1 dari 1</span>
+                    <a id="downloadPptBtn" href="#" download class="btn-secondary" style="width: auto; padding: 6px 14px; font-size: 12px; text-decoration: none;">📥 Unduh File Asli</a>
+                </div>
+                
+                <!-- Kotak Canvas Halaman PDF -->
+                <div id="canvasContainer" style="width: 100%; min-height: 580px; background: #0b0f19; border-radius: 8px; display: flex; justify-content: center; align-items: center; overflow: auto; padding: 10px; border: 2px solid rgba(56, 189, 248, 0.2);">
+                    <canvas id="pdfCanvas" style="max-width: 100%; height: auto; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border-radius: 4px;"></canvas>
+                </div>
+
+                <!-- Tombol Navigasi Prev & Next (Hanya Guru) -->
+                <div class="slide-controls-bar" id="teacherSlideControls" style="display: none; justify-content: space-between; align-items: center; margin-top: 15px; background: rgba(15, 23, 42, 0.6); padding: 12px 20px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08);">
+                    <button id="prevSlideBtn" class="btn-secondary" style="width: auto; padding: 10px 24px;">◀ Sebelumnya</button>
+                    <span id="pageIndicatorText" style="font-weight: 600; color: #38bdf8; font-size: 15px;">Slide 1 / 1</span>
+                    <button id="nextSlideBtn" class="btn-primary" style="width: auto; padding: 10px 24px;">Selanjutnya ▶</button>
+                </div>
+
+                <!-- Info Indikator Slide untuk Murid -->
+                <div id="studentSlideIndicator" style="display: none; text-align: center; margin-top: 15px; background: rgba(15, 23, 42, 0.6); padding: 12px; border-radius: 10px; color: #38bdf8; font-weight: 600; border: 1px solid rgba(255,255,255,0.08);">
+                    <span id="studentPageIndicatorText">Mengikuti Tampilan Guru - Slide 1 / 1</span>
+                </div>
+            </div>
+
+            <!-- Panel Kuis & Daftar Pertanyaan -->
+            <div class="glass-card quiz-card">
+                <h3>💬 Panel Kuis & Daftar Pertanyaan</h3>
+                <div id="guruQuizArea">
+                    <div id="teacherQuizForm" style="display:none; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 15px;">
+                        <input type="text" id="inputSoalText" placeholder="Ketik pertanyaan kuis baru untuk murid..." class="form-control" style="margin-bottom:12px;">
+                        <button id="btnKirimSoal" class="btn-success">➕ Tambah & Kirim Soal ke Murid</button>
+                    </div>
+
+                    <!-- Daftar List Pertanyaan -->
+                    <div class="quiz-box">
+                        <p style="font-weight: 600; color: #38bdf8; margin-bottom: 10px;">Daftar Pertanyaan Sesi Ini:</p>
+                        <div id="listSoalContainer" style="max-height: 240px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;">
+                            <p style="color: #94a3b8; font-style: italic;">Belum ada soal yang dikirimkan.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skor Sementara (Hanya Guru saat Sesi Berlangsung) -->
+                <div class="score-display-box" id="scoreDisplayWrapper" style="display:none;">
+                    <span>Skor Sementara Murid:</span>
+                    <h2 id="liveScoreDisplay">0</h2>
+                </div>
+                <div id="studentNoticeBox" style="display:none; text-align:center; padding: 10px; color: #94a3b8; font-style: italic; font-size: 13px;">
+                    Perhatikan materi dari guru dan kerjakan soal yang muncul. Materi tetap dapat diakses setelah sesi selesai.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Skor Akhir -->
+    <div id="scoreModal" class="modal-backdrop" style="display:none;">
+        <div class="glass-card modal-box">
+            <h2>Sesi Pembelajaran Selesai 🎉</h2>
+            <p>Murid: <span id="modalNamaMurid" style="font-weight:600;"></span></p>
+            <p>Materi: <span id="modalMateriName" style="font-weight:600;"></span></p>
+            <p style="margin-top: 15px; color: #cbd5e1;">Perolehan Nilai Akhir:</p>
+            <div class="score-big" id="modalFinalScore">0</div>
+            <p style="color:#94a3b8; font-size:13px; margin-bottom:20px;">Nilai telah berhasil disimpan ke database profil murid.</p>
+            <div style="display: flex; gap: 10px;">
+                <button id="btnCloseModal" class="btn-secondary" style="width: 50%;">Tutup & Lanjut Lihat Materi</button>
+                <button onclick="location.href='materi.html'" class="btn-primary" style="width: 50%;">Kembali ke Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

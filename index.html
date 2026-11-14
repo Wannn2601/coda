@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CODA Interactive Learning</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+    <div class="glass-card">
+        <div style="text-align: center; margin-bottom: 25px;">
+            <span class="logo-badge" style="font-size: 18px; padding: 8px 14px;">CODA</span>
+            <h2 style="margin-top: 15px; color: #fff; font-size: 22px;">Masuk Ruang Kelas</h2>
+            <p style="color: #94a3b8; font-size: 13px; margin-top: 5px;">Platform Pembelajaran Interaktif & Sinkronisasi Real-time</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Nama Pengguna / Nama Lengkap</label>
+                <input type="text" id="loginName" placeholder="Contoh: Pak Budi atau Natan" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>Password Akses</label>
+                <input type="password" id="loginPass" placeholder="••••••••" required class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label>Pilih Peran (Role)</label>
+                <select id="loginRole" class="form-control">
+                    <option value="murid">Murid (Siswa)</option>
+                    <option value="guru">Guru (Pengajar)</option>
+                </select>
+            </div>
+
+            <!-- Dropdown Target Murid (Hanya muncul jika login sebagai Guru) -->
+            <div class="form-group" id="targetMuridGroup" style="display: none;">
+                <label>Target Murid yang Dibimbing</label>
+                <select id="targetMuridSelect" class="form-control">
+                    <!-- Dimuat dinamis dari koleksi user_coda -->
+                </select>
+            </div>
+
+            <button type="submit" class="btn-primary" style="margin-top: 10px;">Masuk ke Dashboard</button>
+        </form>
+
+        <div style="margin-top: 20px; display: flex; gap: 10px;">
+            <button id="btnQuickNatan" class="btn-secondary" style="font-size: 12px; padding: 8px;">⚡ Quick Login (Natan)</button>
+            <button id="btnQuickGuru" class="btn-secondary" style="font-size: 12px; padding: 8px;">⚡ Quick Login (Guru)</button>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

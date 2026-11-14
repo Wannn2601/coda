@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report & Rekap Nilai - CODA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="classroom-body">
+    <header class="glass-nav">
+        <div class="logo-area">
+            <span class="logo-badge">CODA</span>
+            <h3>Report & Rekap Nilai Murid</h3>
+        </div>
+        <div class="user-badge-area">
+            <span id="displayUserInfo" class="user-pill">-</span>
+            <button onclick="location.href='materi.html'" class="btn-secondary" style="width: auto; padding: 8px 16px;">⬅ Kembali ke Dashboard</button>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Filter / Pilih Murid -->
+        <div class="glass-section" style="padding: 20px; margin-bottom: 25px;">
+            <h3 style="font-size: 16px; margin-bottom: 12px; color: #38bdf8;">Pilih Profil Murid</h3>
+            <div style="display: flex; gap: 15px; align-items: center;">
+                <select id="selectMuridReport" class="form-control" style="max-width: 350px;"></select>
+                <button id="btnLoadReport" class="btn-primary" style="width: auto; padding: 10px 20px;">Tampilkan Rekap</button>
+            </div>
+        </div>
+
+        <!-- Bagian Hasil Rekap Nilai -->
+        <div id="reportResultSection" style="display: none;">
+            <div class="glass-section" style="padding: 25px; margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 15px; margin-bottom: 20px;">
+                    <div>
+                        <h2 id="reportNamaMurid" style="color: #fff; font-size: 20px;">Nama Murid</h2>
+                        <p style="color: #94a3b8; font-size: 13px; margin-top: 4px;">Skor Terakhir: <span id="reportSkorTerakhir" style="color: #34d399; font-weight: 600;">0</span></p>
+                    </div>
+                </div>
+
+                <h3 style="font-size: 15px; color: #38bdf8; margin-bottom: 15px;">Riwayat Sesi Pembelajaran & Kuis</h3>
+                <div id="riwayatListContainer" style="display: flex; flex-direction: column; gap: 15px;">
+                    <!-- Data riwayat dimuat dinamis -->
+                </div>
+            </div>
+        </div>
+
+        <div id="emptyReportState" class="glass-card center-prompt" style="margin-top: 40px;">
+            <p style="color: #94a3b8;">Silakan pilih nama murid di atas lalu klik "Tampilkan Rekap" untuk melihat detail nilai.</p>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Materi - CODA</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="classroom-body">
+    <header class="glass-nav">
+        <div class="logo-area">
+            <span class="logo-badge">CODA</span>
+            <h3>Dashboard Pembelajaran</h3>
+        </div>
+        <div class="user-badge-area">
+            <span id="displayUserInfo" class="user-pill">-</span>
+            <button id="btnLogout" class="btn-danger" style="width: auto; padding: 8px 16px;">Keluar</button>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <!-- Tombol Akses Cepat ke Report Rekap Nilai -->
+        <div style="margin-bottom: 20px;">
+            <button onclick="location.href='report.html'" class="btn-primary" style="width: auto; padding: 10px 20px;">📊 Buka Panel Report & Rekap Nilai</button>
+            <button onclick="location.href='pelajaran.html'" class="btn-success" style="width: auto; padding: 10px 20px; margin-left: 10px;">🚀 Masuk Ruang Belajar Aktif</button>
+        </div>
+
+        <!-- Form Upload Materi (Hanya tampil untuk Guru) -->
+        <div id="uploadSection" class="glass-section" style="display:none;">
+            <h3 style="margin-bottom: 15px; color: #38bdf8;">📤 Unggah Dokumen Materi Baru (PDF)</h3>
+            <form id="uploadPptForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>ID Materi</label>
+                        <input type="text" id="pptId" readonly class="form-control" style="background: rgba(15,23,42,0.9); color: #94a3b8;">
+                    </div>
+                    <div class="form-group">
+                        <label>Judul / Nama Materi</label>
+                        <input type="text" id="pptName" placeholder="Contoh: Modul Dasar HTML" required class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Pilih File Dokumen (PDF)</label>
+                    <input type="file" id="localFilePicker" accept="application/pdf" required class="form-control" style="padding: 10px;">
+                </div>
+                <input type="text" id="pptStatus" readonly class="form-control" style="border:none; background:transparent; color:#34d399; font-size:13px; margin-bottom:12px; padding:0;" placeholder="">
+                <button type="submit" class="btn-success">Simpan Dokumen ke Firestore</button>
+            </form>
+        </div>
+
+        <!-- Daftar Materi Tersimpan -->
+        <div class="glass-section">
+            <h3 style="margin-bottom: 15px; color: #38bdf8;">📚 Daftar Materi Tersimpan di Database</h3>
+            <div id="listMateriContainer" style="display: flex; flex-direction: column; gap: 10px;">
+                <p style="color: #94a3b8; font-size: 13px;">Memuat materi...</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
